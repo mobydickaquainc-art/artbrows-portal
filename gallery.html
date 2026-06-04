@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARTbrows · 콘텐츠 갤러리</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+:root{--apricot:#FBEAE2;--cream:#FFFBF5;--ink:#2A1D1A;--muted:#9A6A5E;--coral:#FF7A66;--hotpink:#FF6F84;--gold:#E8B872;--line:#F0D6CC;}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6}
+.serif{font-family:'Nanum Myeongjo',serif}
+a{color:inherit;text-decoration:none}
+nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);background:rgba(255,251,245,.82);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:18px}
+.logo{font-weight:900;font-size:20px;letter-spacing:.02em}
+.logo span{color:var(--coral)}
+.nav-links{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:700;color:#6b4f48}
+.nav-links a:hover{background:#fff}
+.nav-links a.cur{color:var(--coral)}
+.nav-cta{background:var(--hotpink);color:#fff!important;padding:9px 18px!important}
+.hero{position:relative;height:460px;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('assets/gallery-hero.png') center/cover;transform:scale(1.05)}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,251,245,.94) 0%,rgba(255,251,245,.55) 44%,rgba(255,251,245,0) 72%)}
+.hero-in{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 24px;width:100%}
+.hero .eyebrow{letter-spacing:.42em;font-size:13px;font-weight:800;color:var(--coral)}
+.hero h1{font-size:88px;line-height:1.0;font-weight:800;margin:14px 0 14px;background:linear-gradient(95deg,#FF6F84,#FF7A66 45%,#E8B872);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:18px;color:#6b4f48;max-width:460px;font-weight:500}
+.filters{max-width:1240px;margin:38px auto 4px;padding:0 24px;display:flex;gap:10px;flex-wrap:wrap}
+.filter{padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:.16s;color:#6b4f48}
+.filter.active,.filter:hover{background:linear-gradient(95deg,#FF6F84,#FF7A66);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(255,111,132,.3)}
+.grid{max-width:1240px;margin:22px auto 64px;padding:0 24px;columns:3;column-gap:20px}
+.item{break-inside:avoid;margin-bottom:20px;border-radius:20px;overflow:hidden;position:relative;cursor:pointer;box-shadow:0 8px 24px rgba(232,169,155,.2);transition:.22s;background:#fff}
+.item:hover{transform:translateY(-5px);box-shadow:0 18px 42px rgba(255,111,132,.28)}
+.item img{width:100%;display:block}
+.item .ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(42,29,26,.8),rgba(42,29,26,0) 55%);opacity:0;transition:.22s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
+.item:hover .ov{opacity:1}
+.item .ov .t{color:#fff;font-weight:800;font-size:16px}
+.item .ov .c{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.06em;margin-bottom:3px}
+.tag{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);color:var(--coral);font-size:11px;font-weight:800;padding:4px 11px;border-radius:999px;z-index:2}
+.video-ph{aspect-ratio:4/5;background:linear-gradient(135deg,#FFE3D6,#FFD2DC);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted)}
+.video-ph .play{width:62px;height:62px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--hotpink);box-shadow:0 8px 20px rgba(255,111,132,.3)}
+.lb{position:fixed;inset:0;background:rgba(30,18,16,.92);z-index:1000;display:none;align-items:center;justify-content:center;padding:30px}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:88vh;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.lb .x{position:absolute;top:20px;right:30px;color:#fff;font-size:42px;cursor:pointer;font-weight:300;line-height:1}
+footer{background:#2A1D1A;color:#F6E6DF;text-align:center;padding:42px 24px;font-size:13px;line-height:1.9}
+@media(max-width:900px){.grid{columns:2}.hero h1{font-size:56px}.hero{height:380px}}
+@media(max-width:560px){.grid{columns:1}.hero h1{font-size:44px}}
+</style></head>
+<body>
+<nav><div class="nav-in">
+  <a href="index.html" class="logo">ART<span>brows</span></a>
+  <div class="nav-links">
+    <a href="index.html">홈</a>
+    <a href="gallery.html" class="cur">갤러리</a>
+    <a href="개발과정.html">개발 과정</a>
+    <a href="ARTbrows-업무보고-대시보드.html">업무 보고</a>
+    <a class="nav-cta" href="landing-pages/artbrows-모집-럭셔리에디토리얼.html">상담 신청</a>
+  </div>
+</div></nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-in">
+    <div class="eyebrow">ARTBROWS · CONTENT GALLERY</div>
+    <h1 class="serif">Gallery</h1>
+    <p>극사실눈썹 창시자의 브랜드 콘텐츠 — 인스타 모집 이미지와 쇼츠 영상을 한 곳에서.</p>
+  </div>
+</header>
+
+<div class="filters">
+  <button class="filter active" data-f="all">전체</button>
+  <button class="filter" data-f="card">모집 카드</button>
+  <button class="filter" data-f="image">무드 이미지</button>
+  <button class="filter" data-f="video">영상</button>
+</div>
+
+<div class="grid" id="grid">
+  <div class="item" data-cat="card" data-src="assets/광고/광고이미지-모집.png">
+    <span class="tag">광고 · 모집</span>
+    <img src="assets/광고/광고이미지-모집.png" alt="모집 광고 이미지" loading="lazy">
+    <div class="ov"><div class="c">AD · RECRUIT</div><div class="t">창시자 직강 · 소수정예 모집</div></div>
+  </div>
+  <div class="item" data-cat="video">
+    <span class="tag">광고 쇼츠 · NEW</span>
+    <video src="assets/광고/광고쇼츠-완성.mp4" controls muted loop playsinline preload="metadata" style="width:100%;display:block"></video>
+  </div>
+  <div class="item" data-cat="image" data-src="assets/쇼츠/주인공강아지-변신.png">
+    <span class="tag">쇼츠</span>
+    <img src="assets/쇼츠/주인공강아지-변신.png" alt="주인공+강아지 변신" loading="lazy">
+    <div class="ov"><div class="c">SHORTS · AFTER ✨</div><div class="t">눈썹 변신! 주인공 &amp; 강아지</div></div>
+  </div>
+  <div class="item" data-cat="image" data-src="assets/쇼츠/주인공강아지-멍.png">
+    <span class="tag">쇼츠</span>
+    <img src="assets/쇼츠/주인공강아지-멍.png" alt="주인공+강아지 멍" loading="lazy">
+    <div class="ov"><div class="c">SHORTS · BEFORE</div><div class="t">눈썹 없는 둘 (코믹)</div></div>
+  </div>
+  <div class="item" data-cat="card" data-src="assets/모집카드시안/artbrows-모집카드B-완성.png">
+    <span class="tag">모집 카드</span>
+    <img src="assets/모집카드시안/artbrows-모집카드B-완성.png" alt="모집 카드 완성본" loading="lazy">
+    <div class="ov"><div class="c">RECRUIT CARD</div><div class="t">극사실눈썹 창시자 직강 · 모집</div></div>
+  </div>
+  <div class="item" data-cat="image" data-src="assets/모집카드시안/artbrows-모집카드-시안B.png">
+    <span class="tag">무드</span>
+    <img src="assets/모집카드시안/artbrows-모집카드-시안B.png" alt="시안 B" loading="lazy">
+    <div class="ov"><div class="c">MOOD · B</div><div class="t">눈썹 아치 골드 모티프</div></div>
+  </div>
+  <div class="item" data-cat="image" data-src="assets/모집카드시안/artbrows-모집카드-시안A.png">
+    <span class="tag">무드</span>
+    <img src="assets/모집카드시안/artbrows-모집카드-시안A.png" alt="시안 A" loading="lazy">
+    <div class="ov"><div class="c">MOOD · A</div><div class="t">골드 라인 잎새 모티프</div></div>
+  </div>
+  <div class="item" data-cat="video">
+    <span class="tag">쇼츠 · NEW ▶</span>
+    <div style="position:relative;width:100%;aspect-ratio:9/16;overflow:hidden;background:#000">
+      <iframe src="https://www.youtube.com/embed/DF-7i_clWgw" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="ARTbrows 쇼츠 · 눈썹 없던 그녀와 도비의 인생역전"></iframe>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lb"><span class="x" id="lbx">&times;</span><img id="lbimg" src="" alt=""></div>
+
+<footer>
+  ARTbrows 콘텐츠 갤러리 · 극사실눈썹 창시자<br>
+  AI 직원 유나(그래픽) × 이서연(기획) · 힉스필드로 제작
+</footer>
+
+<script>
+const items=[...document.querySelectorAll('.item')];
+document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{
+  document.querySelector('.filter.active').classList.remove('active');
+  b.classList.add('active');
+  const f=b.dataset.f;
+  items.forEach(it=>{it.style.display=(f==='all'||it.dataset.cat===f)?'':'none'});
+});
+const lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg');
+items.forEach(it=>{if(it.dataset.src)it.onclick=()=>{lbimg.src=it.dataset.src;lb.classList.add('open')}});
+document.getElementById('lbx').onclick=()=>lb.classList.remove('open');
+lb.onclick=e=>{if(e.target===lb)lb.classList.remove('open')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
+</script>
+</body></html>

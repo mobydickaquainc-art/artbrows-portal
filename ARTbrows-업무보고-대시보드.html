@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARTbrows · 업무 보고 대시보드</title>
+<style>
+  :root{
+    --apricot:#FBEAE2; --apricot2:#F7DCD2; --cream:#FFFBF5; --ink:#3A2A26;
+    --muted:#9A6A5E; --coral:#FF7A66; --hotpink:#FF6F84; --line:#F0D6CC;
+    --done:#5BAE8A; --doing:#E8A33D; --wait:#C2A9A0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--apricot);color:var(--ink);
+    font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+    line-height:1.65;padding:28px 18px 60px}
+  .wrap{max-width:1080px;margin:0 auto}
+  a{color:inherit}
+  .serif{font-family:'Nanum Myeongjo','Apple SD Gothic Neo',serif}
+
+  /* header */
+  .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+    gap:14px;background:linear-gradient(135deg,#FF8FA3,#FF7A66);color:#fff;
+    border-radius:22px;padding:26px 30px;box-shadow:0 10px 26px rgba(255,122,102,.30)}
+  .top .brand{font-size:13px;letter-spacing:.35em;font-weight:700;opacity:.92}
+  .top h1{font-size:27px;font-weight:800;margin-top:4px}
+  .top .meta{text-align:right;font-size:13px;line-height:1.7;opacity:.95}
+  .badge{display:inline-block;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);
+    padding:4px 12px;border-radius:999px;font-weight:700;font-size:12.5px;margin-top:4px}
+
+  /* stat row */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+  .stat{background:var(--cream);border-radius:16px;padding:18px 20px;box-shadow:0 5px 16px rgba(232,169,155,.18)}
+  .stat .k{font-size:12px;color:var(--coral);font-weight:800;letter-spacing:.04em}
+  .stat .v{font-size:22px;font-weight:800;margin-top:4px}
+  .stat .s{font-size:12.5px;color:var(--muted)}
+
+  /* section */
+  section{background:var(--cream);border-radius:20px;padding:26px 28px;margin:16px 0;
+    box-shadow:0 5px 18px rgba(232,169,155,.16)}
+  .h{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+  .h .num{font-size:12px;color:#fff;background:var(--coral);border-radius:8px;padding:2px 9px;font-weight:800}
+  .h h2{font-size:20px;font-weight:800}
+  .h .hint{margin-left:auto;font-size:12.5px;color:var(--muted)}
+
+  /* roadmap */
+  .phase{margin:12px 0}
+  .phase .row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .phase .name{font-weight:700;font-size:15px}
+  .phase .pct{margin-left:auto;font-size:13px;font-weight:800;color:var(--muted)}
+  .bar{height:11px;background:var(--apricot2);border-radius:999px;overflow:hidden}
+  .bar > i{display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,#FF8FA3,#FF7A66)}
+  .chip{font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:999px;color:#fff}
+  .c-done{background:var(--done)} .c-doing{background:var(--doing)} .c-wait{background:var(--wait)}
+  .phase small{color:var(--muted);font-size:12.5px}
+
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .member{background:var(--apricot);border-radius:16px;padding:18px;border:1px solid var(--line)}
+  .member .av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#fff;font-size:16px;margin-bottom:10px}
+  .member .nm{font-weight:800;font-size:16px}
+  .member .ro{font-size:12.5px;color:var(--coral);font-weight:700;margin-bottom:8px}
+  .member .now{font-size:13px;color:var(--muted)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  /* kanban */
+  .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .col{background:var(--apricot);border-radius:14px;padding:14px}
+  .col .ct{font-weight:800;font-size:13.5px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+  .task{background:var(--cream);border-radius:10px;padding:9px 12px;margin:7px 0;font-size:13px;
+    border-left:3px solid var(--line)}
+  .col.done .task{border-left-color:var(--done)}
+  .col.doing .task{border-left-color:var(--doing)}
+  .col.wait .task{border-left-color:var(--wait)}
+
+  /* deliverables */
+  .files{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+  .file{display:block;text-decoration:none;background:var(--apricot);border:1px solid var(--line);
+    border-radius:14px;padding:14px;transition:.15s}
+  .file:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(232,169,155,.30)}
+  .file .ext{font-size:11px;font-weight:800;color:var(--coral)}
+  .file .fn{font-size:13.5px;font-weight:700;margin-top:4px}
+  .file .fd{font-size:12px;color:var(--muted);margin-top:2px}
+  .files-h{font-size:13px;font-weight:800;color:var(--muted);margin-top:6px}
+
+  /* timeline */
+  .tl{position:relative;padding-left:22px}
+  .tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  .day{position:relative;margin-bottom:18px}
+  .day::before{content:"";position:absolute;left:-19px;top:4px;width:12px;height:12px;border-radius:50%;
+    background:var(--coral);border:3px solid var(--cream)}
+  .day .date{font-weight:800;font-size:14px}
+  .day .date span{font-weight:600;color:var(--muted);font-size:12.5px;margin-left:6px}
+  .day ul{list-style:none;margin-top:6px}
+  .day li{font-size:13.5px;color:#5a4540;padding-left:14px;position:relative;margin:4px 0}
+  .day li::before{content:"·";position:absolute;left:2px;color:var(--coral);font-weight:800}
+
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:24px;line-height:1.8}
+  .note{background:#FFF3EF;border:1px dashed var(--coral);border-radius:12px;padding:10px 14px;
+    font-size:12.5px;color:#9A6A5E;text-align:center;margin-top:16px}
+
+  @media(max-width:820px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .team,.kanban{grid-template-columns:1fr}
+    .files{grid-template-columns:repeat(2,1fr)}
+    .top .meta{text-align:left}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" style="display:inline-block;margin-bottom:14px;font-weight:800;color:#9A6A5E;font-size:13.5px;text-decoration:none">← ARTbrows 포털 홈</a>
+
+  <!-- HEADER -->
+  <div class="top">
+    <div>
+      <div class="brand">ARTBROWS · 극사실눈썹 창시자</div>
+      <h1>업무 보고 대시보드</h1>
+    </div>
+    <div class="meta">
+      보고 대상 · 대표님 / 회장님<br>
+      마지막 업데이트 · <b>2026-06-03 (수)</b><br>
+      <span class="badge">현재 단계 · Phase 1 인스타 모집 콘텐츠</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><div class="k">현재 단계</div><div class="v">Phase 1</div><div class="s">인스타 모집 콘텐츠</div></div>
+    <div class="stat"><div class="k">완성 작업물</div><div class="v">16건+</div><div class="s">+ 첫 쇼츠 유튜브 게시</div></div>
+    <div class="stat"><div class="k">AI 직원</div><div class="v">2명 활동</div><div class="s">+ PD 1명 · 마스코트 도비</div></div>
+    <div class="stat"><div class="k">다음 마일스톤</div><div class="v">카드 세트</div><div class="s">모집 퍼널 확장</div></div>
+  </div>
+
+  <!-- 1. 로드맵 진행률 -->
+  <section>
+    <div class="h"><span class="num">01</span><h2>단계 · 로드맵 진행률</h2><span class="hint">기획 → 플랜 → 스케줄 → 개발 (하네스 공법)</span></div>
+
+    <div class="phase">
+      <div class="row"><span class="name">Phase 0 · 기반 정비</span><span class="chip c-done">완료</span><span class="pct">100%</span></div>
+      <div class="bar"><i style="width:100%"></i></div>
+      <small>산출물 복구·힉스필드 Plus 결제·MCP 연결·유나 채용 완료 ✓</small>
+    </div>
+    <div class="phase">
+      <div class="row"><span class="name">Phase 1 · 인스타 모집 콘텐츠</span><span class="chip c-doing">진행 중</span><span class="pct">35%</span></div>
+      <div class="bar"><i style="width:35%"></i></div>
+      <small>첫 모집 카드 ✓ · 코믹 쇼츠 "눈썹 없던 그녀와 도비" 완성·유튜브 게시 ✓ · 남은 일: 카드 세트 확장</small>
+    </div>
+    <div class="phase">
+      <div class="row"><span class="name">Phase 2 · 광고 플랫폼 & 모집 퍼널</span><span class="chip c-wait">대기</span><span class="pct">0%</span></div>
+      <div class="bar"><i style="width:0%"></i></div>
+      <small>상세페이지 → 상담 신청 퍼널 · (선택) 유료 광고</small>
+    </div>
+    <div class="phase">
+      <div class="row"><span class="name">Phase 3 · 콘텐츠 자동화 웹앱</span><span class="chip c-wait">대기</span><span class="pct">0%</span></div>
+      <div class="bar"><i style="width:0%"></i></div>
+      <small>블로그/인스타 콘텐츠 자동 생성 (최종 목표)</small>
+    </div>
+  </section>
+
+  <!-- 2. AI 직원 현황 -->
+  <section>
+    <div class="h"><span class="num">02</span><h2>팀 · AI 직원 현황</h2><span class="hint">누가 무슨 일을 하는가</span></div>
+    <div class="team">
+      <div class="member">
+        <div class="av" style="background:#3A2A26">정</div>
+        <div class="nm">정주</div>
+        <div class="ro">PD · 총괄 (사람)</div>
+        <div class="now"><span class="dot" style="background:var(--done)"></span>프로젝트 총괄·방향 결정</div>
+      </div>
+      <div class="member">
+        <div class="av" style="background:linear-gradient(135deg,#FF8FA3,#FF7A66)">이</div>
+        <div class="nm">이서연</div>
+        <div class="ro">기획·마케팅 (AI)</div>
+        <div class="now"><span class="dot" style="background:var(--done)"></span>로드맵·산출물 복구·대시보드</div>
+      </div>
+      <div class="member">
+        <div class="av" style="background:linear-gradient(135deg,#FFC93C,#FF7A66)">유</div>
+        <div class="nm">유나</div>
+        <div class="ro">그래픽·비주얼 (AI)</div>
+        <div class="now"><span class="dot" style="background:var(--done)"></span>힉스필드로 카드·쇼츠 비주얼 제작</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 작업 진행 + 작업물 -->
+  <section>
+    <div class="h"><span class="num">03</span><h2>작업 진행 · 작업물</h2><span class="hint">할 일 / 진행 중 / 완료</span></div>
+    <div class="kanban">
+      <div class="col wait">
+        <div class="ct"><span class="chip c-wait">할 일</span></div>
+        <div class="task">모집 카드 세트 확장 (후킹·커리큘럼·차별점·CTA)</div>
+        <div class="task">브랜드 자료 수급 (가격·커리큘럼·후기·상담링크·사진)</div>
+        <div class="task">컷5 변신 추가 6컷 업그레이드 (선택)</div>
+        <div class="task">인스타 실제 업로드·운영</div>
+      </div>
+      <div class="col doing">
+        <div class="ct"><span class="chip c-doing">진행 중</span></div>
+        <div class="task">Phase 1 인스타 콘텐츠 제작</div>
+        <div class="task">복구 문서에 브랜드 자료 채우기 (자료 대기)</div>
+      </div>
+      <div class="col done">
+        <div class="ct"><span class="chip c-done">완료</span></div>
+        <div class="task">프로젝트 정의 · CLAUDE.md</div>
+        <div class="task">브랜드 자료 분석</div>
+        <div class="task">도구·워크플로 확정</div>
+        <div class="task">전체 로드맵 재정비</div>
+        <div class="task">누락 산출물 5종 복구</div>
+        <div class="task">업무 보고 대시보드</div>
+        <div class="task">통합 포털 홈·웹앱·개발과정 페이지</div>
+        <div class="task">이미지·영상 도구 힉스필드 단일 통합</div>
+        <div class="task">힉스필드 MCP 연결 (Plus·인증 완료)</div>
+        <div class="task">디자인 도구 역할 분담 (Canva·Claude)</div>
+        <div class="task">산출물 외부 공유 임시 배포 (터널·18000)</div>
+        <div class="task">힉스필드 Plus 결제 (크레딧 1,010)</div>
+        <div class="task">그래픽 디자이너 유나 채용</div>
+        <div class="task">힉스필드 크레딧 단가 실측 (이미지1·영상22.5)</div>
+        <div class="task">첫 인스타 모집 카드 완성</div>
+        <div class="task">콘텐츠 갤러리 신설 (gallery.html)</div>
+        <div class="task">포털 홈 화려 에디토리얼 리뉴얼</div>
+        <div class="task">마스코트 '도비' 도입 (반려견 기반)</div>
+        <div class="task">코믹 지브리 쇼츠 완성 + 유튜브 게시 ✓</div>
+      </div>
+    </div>
+
+    <div class="files-h">완성 작업물 (클릭하면 열림)</div>
+    <div class="files">
+      <a class="file" href="docs/artbrows-전체로드맵.md"><div class="ext">MD</div><div class="fn">전체 로드맵</div><div class="fd">4단계 플랜·스케줄</div></a>
+      <a class="file" href="docs/PROGRESS.md"><div class="ext">MD</div><div class="fn">진행상황</div><div class="fd">현재 단계 기록</div></a>
+      <a class="file" href="docs/artbrows-도구워크플로-확정안.md"><div class="ext">MD</div><div class="fn">도구·워크플로</div><div class="fd">도구·비용 확정안</div></a>
+      <a class="file" href="docs/artbrows-기획마케팅안.html"><div class="ext">HTML</div><div class="fn">기획·마케팅안</div><div class="fd">포지셔닝·퍼널</div></a>
+      <a class="file" href="personas/이서연-기획마케팅.md"><div class="ext">MD</div><div class="fn">이서연 페르소나</div><div class="fd">AI 직원 정의</div></a>
+      <a class="file" href="assets/artbrows-파이프라인-비용도식.svg"><div class="ext">SVG</div><div class="fn">파이프라인 도식</div><div class="fd">제작·월비용</div></a>
+      <a class="file" href="landing-pages/artbrows-모집-기본.html"><div class="ext">HTML</div><div class="fn">모집 상세 · 기본</div><div class="fd">수강생 모집</div></a>
+      <a class="file" href="landing-pages/artbrows-모집-럭셔리에디토리얼.html"><div class="ext">HTML</div><div class="fn">모집 상세 · 럭셔리</div><div class="fd">에디토리얼</div></a>
+      <a class="file" href="index.html"><div class="ext">HTML</div><div class="fn">통합 포털 홈</div><div class="fd">전체 연결 허브</div></a>
+      <a class="file" href="개발과정.html"><div class="ext">HTML</div><div class="fn">개발 과정</div><div class="fd">구축 일지·결정</div></a>
+      <a class="file" href="webapp.html"><div class="ext">HTML</div><div class="fn">웹앱 (준비중)</div><div class="fd">Phase 3 예고</div></a>
+      <a class="file" href="gallery.html"><div class="ext">HTML</div><div class="fn">콘텐츠 갤러리</div><div class="fd">이미지·영상 모음</div></a>
+      <a class="file" href="https://youtube.com/shorts/DF-7i_clWgw"><div class="ext">▶ 쇼츠</div><div class="fn">코믹 쇼츠 6컷 (유튜브)</div><div class="fd">눈썹 없던 그녀와 도비</div></a>
+      <a class="file" href="assets/모집카드시안/artbrows-모집카드B-완성.png"><div class="ext">PNG</div><div class="fn">모집 카드 완성</div><div class="fd">창시자 직강</div></a>
+      <a class="file" href="personas/유나-그래픽디자이너.md"><div class="ext">MD</div><div class="fn">유나 페르소나</div><div class="fd">그래픽 AI 직원</div></a>
+    </div>
+  </section>
+
+  <!-- 4. 일일 작업 로그 -->
+  <section>
+    <div class="h"><span class="num">04</span><h2>일일 작업 로그</h2><span class="hint">날짜별 타임라인</span></div>
+    <div class="tl">
+      <div class="day">
+        <div class="date">2026-06-03 <span>수요일 · 오늘</span></div>
+        <ul>
+          <li>대시보드 자동 갱신 규칙 도입 · 힉스필드 Plus 결제 + MCP 연결(크레딧 1,010) · 그래픽 디자이너 '유나' 채용</li>
+          <li>첫 인스타 모집 카드 완성 (힉스필드 무드 + 한글 카피 합성)</li>
+          <li>콘텐츠 갤러리 신설 + 포털 홈 화려 에디토리얼 리뉴얼 (힉스필드 히어로)</li>
+          <li>마스코트 '도비' 도입 (대표님 반려견 기반 지브리 캐릭터)</li>
+          <li><b>코믹 지브리 쇼츠 "눈썹 없던 그녀와 도비의 인생역전" 완성 → 유튜브 게시 🎬</b> (주인공+도비 5컷·"장미지 눈썹 연구소" 간판·ffmpeg 편집)</li>
+        </ul>
+      </div>
+      <div class="day">
+        <div class="date">2026-06-02 <span>화요일</span></div>
+        <ul>
+          <li>전체 로드맵 4단계(Phase 0~3)로 재정비 → 플랜·스케줄·결정대기 문서화</li>
+          <li>폴더에 없던 누락 산출물 5종(6파일) 전부 복구 (페르소나·확정안·도식·기획안·상세페이지 2종)</li>
+          <li>대표님·회장님용 업무 보고 대시보드 제작</li>
+          <li>통합 포털 홈 + 웹앱 준비 + 개발과정 페이지 제작, 디자인 도구 역할 분담(그래픽=Canva·사이트=Claude)</li>
+          <li>이미지·영상 도구 힉스필드 단일 통합 결정, 힉스필드 MCP 등록(계정 인증 대기)</li>
+          <li>완성 산출물을 외부 주소(터널·18000)로 공유 가능하게 임시 배포</li>
+        </ul>
+      </div>
+      <div class="day">
+        <div class="date">2026-06-01 <span>월요일</span></div>
+        <ul>
+          <li>프로젝트 정의 · CLAUDE.md 작성</li>
+          <li>브랜드 자료 분석 (인스타 카드 7종) → 커리큘럼·가격·톤 파악</li>
+          <li>제작 도구 확정 (이미지=Nano Banana Pro · 영상=힉스필드 Veo 3.1)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">※ 본 대시보드는 2026-06-03 기준입니다. ‘작업할 때마다 자동 갱신’ 규칙이 적용되어, 진행상황이 바뀔 때마다 최신 상태로 업데이트됩니다.</div>
+
+  <footer>
+    ARTbrows 업무 보고 대시보드 · 보고 대상 대표님 / 회장님<br>
+    작성 정주(PD) · AI 직원 이서연(기획·마케팅) · 하네스 공법(기획→플랜→스케줄→개발)
+  </footer>
+
+</div>
+</body>
+</html>

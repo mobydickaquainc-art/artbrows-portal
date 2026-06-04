@@ -1,0 +1,72 @@
+<svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+  <defs>
+    <linearGradient id="coral" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8FA3"/>
+      <stop offset="1" stop-color="#FF7A66"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#E8A99B" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="560" fill="#FBEAE2"/>
+
+  <text x="450" y="52" text-anchor="middle" font-size="27" font-weight="700" fill="#3A2A26">ARTbrows 제작 파이프라인 · 도구 통합</text>
+  <text x="450" y="80" text-anchor="middle" font-size="14" fill="#9A6A5E">기획 → 이미지 → 영상 → 발행 · 이미지·영상은 힉스필드 MCP 하나로</text>
+
+  <!-- 카드 4종 -->
+  <g filter="url(#soft)">
+    <rect x="40"  y="120" width="170" height="128" rx="18" fill="#FFFBF5"/>
+    <rect x="255" y="120" width="170" height="128" rx="18" fill="#FFFBF5"/>
+    <rect x="470" y="120" width="170" height="128" rx="18" fill="#FFFBF5"/>
+    <rect x="685" y="120" width="170" height="128" rx="18" fill="#FFFBF5"/>
+  </g>
+  <rect x="40"  y="120" width="170" height="8" rx="4" fill="url(#coral)"/>
+  <rect x="255" y="120" width="170" height="8" rx="4" fill="url(#coral)"/>
+  <rect x="470" y="120" width="170" height="8" rx="4" fill="url(#coral)"/>
+  <rect x="685" y="120" width="170" height="8" rx="4" fill="url(#coral)"/>
+
+  <text x="125" y="166" text-anchor="middle" font-size="15" font-weight="700" fill="#FF6F84">① 기획</text>
+  <text x="125" y="198" text-anchor="middle" font-size="16" font-weight="700" fill="#3A2A26">Claude</text>
+  <text x="125" y="220" text-anchor="middle" font-size="13" fill="#7A5A52">Claude Code</text>
+
+  <text x="340" y="166" text-anchor="middle" font-size="15" font-weight="700" fill="#FF6F84">② 이미지</text>
+  <text x="340" y="198" text-anchor="middle" font-size="16" font-weight="700" fill="#3A2A26">Nano Banana</text>
+  <text x="340" y="220" text-anchor="middle" font-size="13" fill="#7A5A52">힉스필드 MCP</text>
+
+  <text x="555" y="166" text-anchor="middle" font-size="15" font-weight="700" fill="#FF6F84">③ 영상</text>
+  <text x="555" y="198" text-anchor="middle" font-size="16" font-weight="700" fill="#3A2A26">Veo 3.1</text>
+  <text x="555" y="220" text-anchor="middle" font-size="13" fill="#7A5A52">힉스필드 MCP</text>
+
+  <text x="770" y="166" text-anchor="middle" font-size="15" font-weight="700" fill="#FF6F84">④ 발행</text>
+  <text x="770" y="198" text-anchor="middle" font-size="16" font-weight="700" fill="#3A2A26">인스타그램</text>
+  <text x="770" y="220" text-anchor="middle" font-size="13" fill="#7A5A52">모집 콘텐츠</text>
+
+  <!-- 화살표 -->
+  <g fill="#FF7A66">
+    <path d="M218 184 l18 0 0 -7 14 12 -14 12 0 -7 -18 0 z"/>
+    <path d="M433 184 l18 0 0 -7 14 12 -14 12 0 -7 -18 0 z"/>
+    <path d="M648 184 l18 0 0 -7 14 12 -14 12 0 -7 -18 0 z"/>
+  </g>
+
+  <!-- 힉스필드 MCP 통합 브래킷 (카드 ②③) -->
+  <g stroke="#FF7A66" stroke-width="2" fill="none">
+    <path d="M255 268 L255 280 L640 280 L640 268"/>
+    <path d="M447 280 L447 292"/>
+  </g>
+  <rect x="300" y="294" width="295" height="30" rx="15" fill="#3A2A26"/>
+  <text x="447" y="314" text-anchor="middle" font-size="13" font-weight="700" fill="#FFD9CF">힉스필드 MCP 단일 통합 · 이미지+영상</text>
+
+  <!-- 월 비용 카드 -->
+  <g filter="url(#soft)">
+    <rect x="40" y="350" width="815" height="116" rx="18" fill="#FFFBF5"/>
+  </g>
+  <rect x="40" y="350" width="8" height="116" rx="4" fill="url(#coral)"/>
+  <text x="70" y="386" font-size="16" font-weight="700" fill="#3A2A26">월 예상 비용</text>
+  <text x="70"  y="420" font-size="15" fill="#7A5A52">Claude <tspan font-weight="700" fill="#3A2A26">$110</tspan></text>
+  <text x="200" y="420" font-size="15" fill="#7A5A52">+  힉스필드 통합 크레딧 <tspan fill="#3A2A26" font-weight="700">(이미지+영상)</tspan></text>
+  <text x="70"  y="448" font-size="13.5" font-weight="700" fill="#C2503B">합계 — 힉스필드 플랜·크레딧 단가 확인 후 확정</text>
+
+  <text x="450" y="500" text-anchor="middle" font-size="13" fill="#9A6A5E">이미지·영상은 배경·디자인·무드컷·연출용 — 실제 시술 비포&amp;애프터·수강생 얼굴은 실제 사진 (AI 생성 금지)</text>
+  <text x="450" y="526" text-anchor="middle" font-size="12" fill="#C28C7E">ARTbrows · 극사실눈썹 창시자 · 통합 개정 2026-06-02</text>
+</svg>

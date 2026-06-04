@@ -1,0 +1,6 @@
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/테스트컷1-짝눈썹.mp4'
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/컷2-잔혹사.mp4'
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/컷3-발견.mp4'
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/컷4-마법손길.mp4'
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/컷5-변신.mp4'
+file 'D:/work/jangmi/artbrows-project/assets/쇼츠/컷6-웃음.mp4'
