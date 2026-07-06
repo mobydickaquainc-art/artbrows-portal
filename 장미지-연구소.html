@@ -33,13 +33,15 @@
   h2{font-family:'Nanum Myeongjo',serif;font-weight:800;font-size:24px;color:#F5EDE3;margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid #2A2A2A}
   h2 .num{font-family:'Cormorant Garamond',serif;color:#E0C088;margin-right:12px;font-size:30px}
 
-  .saas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  @media(max-width:980px){.saas-grid{grid-template-columns:1fr}}
+  .saas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media(max-width:1180px){.saas-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.saas-grid{grid-template-columns:1fr}}
 
-  .saas{background:#161617;border:1px solid #2A2A2A;border-top:5px solid var(--c);border-radius:16px;padding:26px;display:flex;flex-direction:column;min-height:380px}
+  .saas{background:#161617;border:1px solid #2A2A2A;border-top:5px solid var(--c);border-radius:16px;padding:24px;display:flex;flex-direction:column;min-height:380px}
   .saas.a{--c:#FFB78A}
   .saas.b{--c:#FF4D7E}
   .saas.c{--c:#A8E6B3}
+  .saas.d{--c:#7FB3FF}
   .saas .badge{font-family:'Cormorant Garamond',serif;font-size:46px;color:var(--c);font-weight:700;line-height:1}
   .saas .label{font-size:10.5px;color:var(--c);font-weight:700;letter-spacing:3px;margin-top:4px}
   .saas h3{font-family:'Nanum Myeongjo',serif;color:#F5EDE3;font-size:22px;font-weight:800;margin:8px 0 6px}
@@ -81,13 +83,13 @@
   <div class="chip">JANGMIJI LABORATORY · 미용 통합 SaaS</div>
   <h1>극사실 <em>아트 눈썹</em><br>디지털 플랫폼</h1>
   <p class="lead">30년 노하우의 디지털 트윈 — 3 SaaS 통합</p>
-  <p class="sub">학원·강의·홈페이지 (A) · 광고 마케팅 (B) · Face Lab v7 시뮬 (C)<br>아래에서 메뉴 선택해 시작하세요.</p>
+  <p class="sub">학원·강의·홈페이지 (A) · 광고 마케팅 (B) · Face Lab v7 시뮬 (C) · 쇼핑몰 (D)<br>아래에서 메뉴 선택해 시작하세요.</p>
 </div>
 
 <!-- 3 SaaS 카드 -->
 <div class="container">
 
-  <h2><span class="num">A·B·C</span>3 SaaS 메뉴</h2>
+  <h2><span class="num">A·B·C·D</span>4 SaaS 메뉴</h2>
 
   <div class="saas-grid">
 
@@ -164,6 +166,32 @@
         </li>
         <li class="disabled">
           <span class="name">👤 MetaHuman 갤러리</span>
+          <span class="tag">SOON</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SaaS D -->
+    <div class="saas d">
+      <div class="badge">D</div>
+      <div class="label">쇼핑몰</div>
+      <h3>색소·굿즈 판매</h3>
+      <div class="pm">PM · 결정 대기</div>
+      <ul class="menu">
+        <li class="active">
+          <a href="쇼핑몰-준비-체크리스트-20260622.html">📋 준비 체크리스트</a>
+          <span class="tag">LIVE</span>
+        </li>
+        <li class="disabled">
+          <span class="name">🛍️ 상품 등록 (색소·굿즈)</span>
+          <span class="tag">SOON</span>
+        </li>
+        <li class="disabled">
+          <span class="name">📦 주문 관리</span>
+          <span class="tag">SOON</span>
+        </li>
+        <li class="disabled">
+          <span class="name">💳 결제 연동 (토스·카카오)</span>
           <span class="tag">SOON</span>
         </li>
       </ul>
