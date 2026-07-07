@@ -1304,19 +1304,28 @@ async function exportPng(previewOnly = false) {
           const isMaster = ev.type === 'master' || ev.type === 'advanced';
           const bgColor = isMaster ? '#F5A6BE' : '#D5C4A8';
 
-          // 라벨: 강사 정보 있으면 (원장 직강) 같이 붙임
-          const instructorText = ev.instructor && showLabel ? ` (${ev.instructor})` : '';
-          const finalLabel = showLabel ? (showLabel + instructorText) : '';
+          // 라벨은 강의 이름만 (강사 정보는 pill 밖 별도 줄로)
           const maxLen = 35;
-          const short = finalLabel.length > maxLen ? finalLabel.slice(0, maxLen-1)+'…' : finalLabel;
+          const short = showLabel.length > maxLen ? showLabel.slice(0, maxLen-1)+'…' : showLabel;
 
-          let pillStyle = `background:${bgColor};color:#FFFFFF;font-family:Pretendard,sans-serif;font-weight:700;font-size:22px;padding:14px 0;text-align:center;white-space:nowrap;overflow:visible;box-sizing:border-box;min-height:48px;line-height:20px`;
+          // pill 내부 텍스트: 검정 굵은 산세리프 (벤치마크 매칭)
+          let pillStyle = `background:${bgColor};color:#1F1F1F;font-family:'Pretendard','Noto Sans KR',sans-serif;font-weight:800;font-size:24px;padding:14px 0;text-align:center;white-space:nowrap;overflow:visible;box-sizing:border-box;min-height:50px;line-height:22px;letter-spacing:-0.3px`;
 
-          if (grpPos === 'grp-start') pillStyle += `;border-radius:24px 0 0 24px;margin-left:12px`;
+          if (grpPos === 'grp-start') pillStyle += `;border-radius:26px 0 0 26px;margin-left:12px`;
           else if (grpPos === 'grp-mid') pillStyle += `;border-radius:0`;
-          else if (grpPos === 'grp-end') pillStyle += `;border-radius:0 24px 24px 0;margin-right:12px`;
+          else if (grpPos === 'grp-end') pillStyle += `;border-radius:0 26px 26px 0;margin-right:12px`;
 
           groupHtml += `<div style="${pillStyle}">${short}</div>`;
+
+          // 강사 정보 · 라벨 있는 셀 아래 별도 줄 (배경 없이 검정 볼드)
+          // 원장님 강의(master/advanced/fullpack) 기본 「원장 직강」 자동 표시 · 파트너 강사 이름 있으면 그걸로
+          if (showLabel) {
+            const isDirect = ev.type === 'master' || ev.type === 'advanced' || ev.type === 'fullpack';
+            const displayInstructor = ev.instructor || (isDirect ? '원장 직강' : '');
+            if (displayInstructor) {
+              groupHtml += `<div style="font-family:'Pretendard','Noto Sans KR',sans-serif;font-weight:800;font-size:24px;color:#1F1F1F;margin-top:8px;text-align:center;letter-spacing:-0.3px">(${displayInstructor})</div>`;
+            }
+          }
         } else {
           // 개별 이벤트 → 셀 안 텍스트 (여러 줄 가능)
           const maxLen = 14;
