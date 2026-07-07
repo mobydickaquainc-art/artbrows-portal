@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>강의 스케줄 자동 — 원장님 달력 UI 데모 v1.0</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@400;500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;600;700&family=Great+Vibes&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#FAF6F0;color:#3D2818;line-height:1.65;max-width:1100px;margin:0 auto;padding:24px}
 
@@ -1237,57 +1237,77 @@ async function exportPng(previewOnly = false) {
 
   const months = ['','1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 
-  // 인스타 1080×1350 정사각/세로형 · 원장님 예시 스타일 매치 · 연령층 배려 대형 폰트
+  // 인스타 세로 캐러셀 1080×1350+ · 벤치마크 「@artbrows_academy 8월 수업 일정 안내」 스타일
   const wrap = document.createElement('div');
   const wrapPos = previewOnly ? 'position:relative;top:0;left:0;margin:0 auto' : 'position:fixed;top:-9999px;left:-9999px';
-  wrap.style.cssText = `${wrapPos};width:1080px;background:#FAF6F0;padding:80px 60px;font-family:Pretendard,sans-serif`;
+  wrap.style.cssText = `${wrapPos};width:1080px;background:#F5EED8;padding:60px 40px 40px;font-family:Pretendard,sans-serif`;
 
-  // 헤더 — 월 훨씬 크게
+  // 상단 헤더
   const header = `
-    <div style="text-align:center;margin-bottom:44px">
-      <div style="font-size:22px;color:#8B6452;letter-spacing:4px;margin-bottom:18px;font-weight:700">@artbrows_academy</div>
-      <div style="font-family:'Nanum Myeongjo',serif;font-weight:900;font-size:144px;color:#3D2818;line-height:1;letter-spacing:-3px">${curYear}. ${months[curMonth]}</div>
-      <div style="font-family:'Nanum Myeongjo',serif;font-size:34px;color:#5D4636;margin-top:20px;letter-spacing:3px;font-weight:700">수업 · 특강 일정 안내</div>
+    <div style="text-align:center;margin-bottom:26px">
+      <div style="font-size:22px;color:#5D4636;letter-spacing:1px;margin-bottom:14px;font-weight:500">@artbrows_academy</div>
+      <div style="font-family:'Nanum Myeongjo',serif;font-weight:900;font-size:96px;color:#1F1F1F;line-height:1.05;letter-spacing:-2px">${months[curMonth].replace('월','')}월 수업 일정 안내</div>
     </div>
   `;
 
-  // 요일 헤더 — 대형
-  const dowNames = ['일','월','화','수','목','금','토'];
-  let weekHdr = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:14px">';
-  dowNames.forEach((n, i) => {
-    const bg = i===0 ? '#FFE5D0' : (i===6 ? '#E9F0FA' : '#FAD7C7');
-    const c  = i===0 ? '#FF4D7E' : (i===6 ? '#5B8FDB' : '#3D2818');
-    weekHdr += `<div style="text-align:center;padding:24px 0;background:${bg};color:${c};font-family:'Nanum Myeongjo',serif;font-weight:900;font-size:42px;border-radius:14px">${n}</div>`;
-  });
-  weekHdr += '</div>';
+  // 표 - 흰 배경 · 얇은 테두리
+  let table = `<div style="background:#FFFFFF;border:1px solid #D5D5D5;margin:0 16px">`;
 
-  // 날짜 그리드 — 대형 날짜 · 큰 이벤트 이름 · 시간·요금 표시 X (딱 필요한 것만)
+  // 요일 헤더 (얇은 컬러 배경)
+  const dowNames = ['일','월','화','수','목','금','토'];
+  table += `<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid #E0E0E0">`;
+  dowNames.forEach((n, i) => {
+    const bg = i===0 ? '#FBCFC2' : (i===6 ? '#DDE7F0' : '#FBDDD3');
+    table += `<div style="text-align:center;padding:16px 0;background:${bg};color:#4A4A4A;font-family:Pretendard,sans-serif;font-weight:600;font-size:22px">${n}</div>`;
+  });
+  table += `</div>`;
+
+  // 주별 반복
   const first = new Date(curYear, curMonth-1, 1);
   const lastDay = new Date(curYear, curMonth, 0).getDate();
   const startDay = first.getDay();
-  let grid = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:12px">';
-  for (let i = 0; i < startDay; i++) grid += '<div></div>';
-  for (let d = 1; d <= lastDay; d++) {
-    const dow = new Date(curYear, curMonth-1, d).getDay();
-    const numColor = dow===0 ? '#FF4D7E' : (dow===6 ? '#5B8FDB' : '#3D2818');
-    const key = `${curYear}-${curMonth}-${d}`;
-    const evs = events[key] || [];
-    let evHtml = '';
-    if (evs.length > 0) {
-      const shown = evs.slice(0, 2);
-      shown.forEach(ev => {
-        const t = getType(ev.type);
-        const label = pickEventLabel(ev);
+  const weeksNeeded = Math.ceil((startDay + lastDay) / 7);
+
+  let d = 1;
+  for (let w = 0; w < weeksNeeded; w++) {
+    const isLastWeek = w === weeksNeeded - 1;
+    table += `<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:${isLastWeek?'0':'1px solid #EAEAEA'};min-height:170px">`;
+
+    for (let col = 0; col < 7; col++) {
+      if ((w === 0 && col < startDay) || d > lastDay) {
+        table += `<div></div>`;
+        continue;
+      }
+
+      const dow = new Date(curYear, curMonth-1, d).getDay();
+      const key = `${curYear}-${curMonth}-${d}`;
+      const evs = events[key] || [];
+
+      // 날짜 배지 — 일요일 핑크원 · 토요일 그레이원 · 평일 검정 세리프
+      let dateBadge = '';
+      if (dow === 0) {
+        dateBadge = `<span style="display:inline-block;width:46px;height:46px;line-height:46px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;text-align:center">${d}</span>`;
+      } else if (dow === 6) {
+        dateBadge = `<span style="display:inline-block;width:46px;height:46px;line-height:46px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;text-align:center">${d}</span>`;
+      } else {
+        dateBadge = `<span style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:40px;color:#2A2A2A">${d}</span>`;
+      }
+
+      let individualHtml = '';
+      let groupHtml = '';
+
+      evs.forEach(ev => {
         if (ev.type === 'holiday') {
-          evHtml += `<div style="color:#B8A99A;font-size:28px;font-weight:700;font-style:italic;text-align:center;margin-top:10px;letter-spacing:2px">휴무</div>`;
+          individualHtml += `<div style="font-size:24px;color:#A5A5A5;margin-top:8px;font-weight:400">휴무</div>`;
           return;
         }
-        const bg = t.color || '#FFD8A8';
-        const fg = (ev.type==='advanced'||ev.type==='master') ? '#fff' : '#3D2818';
-        const grpPos = groupPosition(curYear, curMonth, d, ev);
-        // 라벨 위치: 개별=항상 / 2일 그룹=시작 / 3일+ 그룹=중간
-        let showLabel = label;
+        const t = getType(ev.type);
+        const label = pickEventLabel(ev);
+
         if (ev.groupId) {
+          // 그룹 이벤트 → pill 조각 (셀 사이 이어짐)
+          const grpPos = groupPosition(curYear, curMonth, d, ev);
+          let showLabel = label;
           if (grpPos === 'grp-start') {
             const nxt = new Date(curYear, curMonth-1, d+1);
             const nxtKey = `${nxt.getFullYear()}-${nxt.getMonth()+1}-${nxt.getDate()}`;
@@ -1297,38 +1317,56 @@ async function exportPng(previewOnly = false) {
           } else if (grpPos === 'grp-end') {
             showLabel = '';
           }
+
+          // 색상: 원장님(master/advanced) 은 핑크 · 나머지 베이지
+          const isMaster = ev.type === 'master' || ev.type === 'advanced';
+          const bgColor = isMaster ? '#F5A6BE' : '#D5C4A8';
+
+          // 라벨: 강사 정보 있으면 (원장 직강) 같이 붙임
+          const instructorText = ev.instructor && showLabel ? ` (${ev.instructor})` : '';
+          const finalLabel = showLabel ? (showLabel + instructorText) : '';
+          const maxLen = 35;
+          const short = finalLabel.length > maxLen ? finalLabel.slice(0, maxLen-1)+'…' : finalLabel;
+
+          let pillStyle = `background:${bgColor};color:#FFFFFF;font-family:Pretendard,sans-serif;font-weight:700;font-size:22px;padding:14px 0;text-align:center;white-space:nowrap;overflow:visible;box-sizing:border-box;min-height:48px;line-height:20px`;
+
+          if (grpPos === 'grp-start') pillStyle += `;border-radius:24px 0 0 24px;margin-left:12px`;
+          else if (grpPos === 'grp-mid') pillStyle += `;border-radius:0`;
+          else if (grpPos === 'grp-end') pillStyle += `;border-radius:0 24px 24px 0;margin-right:12px`;
+
+          groupHtml += `<div style="${pillStyle}">${short}</div>`;
+        } else {
+          // 개별 이벤트 → 셀 안 텍스트 (여러 줄 가능)
+          const maxLen = 14;
+          const short = label.length > maxLen ? label.slice(0, maxLen-1)+'…' : label;
+          individualHtml += `<div style="font-size:18px;color:#3D2818;margin-top:8px;line-height:1.4;font-weight:500">${short}</div>`;
         }
-        // 그룹 이벤트는 셀 여러 개 폭을 쓰므로 라벨 길이 확장 (개별=8자 · 그룹=20자)
-        const maxLen = ev.groupId ? 20 : 8;
-        const short = showLabel.length > maxLen ? showLabel.slice(0, maxLen-1)+'…' : showLabel;
-        // 그룹 카드는 세로 높이·padding 통일. 좌우 padding만 grp별로 조정 (좌 12·우 12 기본)
-        let extraStyle = '';
-        if (grpPos === 'grp-start') extraStyle = 'border-radius:8px 0 0 8px;margin-right:-30px;padding-left:12px;padding-right:38px';
-        else if (grpPos === 'grp-mid') extraStyle = 'border-radius:0;margin-left:-30px;margin-right:-30px;padding-left:0;padding-right:0';
-        else if (grpPos === 'grp-end') extraStyle = 'border-radius:0 8px 8px 0;margin-left:-30px;padding-left:38px;padding-right:12px';
-        // 강사 이름은 라벨 있는 셀(개별 or 그룹 중간)에만 표시 (라벨 위치와 통일)
-        const labelCell = !ev.groupId || grpPos === 'grp-mid' || (grpPos === 'grp-start' && showLabel);
-        const instructorLine = (ev.instructor && labelCell)
-          ? `<div style="font-size:14px;font-weight:600;color:${fg};opacity:0.85;margin-top:2px">👤 ${ev.instructor}</div>` : '';
-        evHtml += `<div style="background:${bg};color:${fg};font-size:22px;font-weight:800;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;border-radius:8px;margin-top:8px;text-align:center;white-space:nowrap;overflow:visible;position:relative;z-index:2;min-height:44px;box-sizing:border-box;${extraStyle}">${short}${instructorLine}</div>`;
       });
-      if (evs.length > 2) evHtml += `<div style="font-size:14px;color:#8B6452;text-align:center;margin-top:3px">+${evs.length-2}</div>`;
+
+      table += `<div style="text-align:center;padding:14px 0 6px;position:relative">
+        <div style="padding:0 4px">${dateBadge}</div>
+        <div style="padding:0 4px">${individualHtml}</div>
+        <div style="margin-top:12px">${groupHtml}</div>
+      </div>`;
+
+      d++;
     }
-    grid += `<div style="background:#fff;border-radius:14px;padding:18px 10px 14px;min-height:210px;display:flex;flex-direction:column;overflow:visible">
-      <div style="font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:700;color:${numColor};line-height:1;text-align:center">${d}</div>
-      <div style="flex:1;margin-top:10px;overflow:visible">${evHtml}</div>
-    </div>`;
+
+    table += `</div>`;
   }
-  grid += '</div>';
+  table += `</div>`;
 
-  wrap.innerHTML = header + `<div style="background:#fff;border-radius:24px;padding:34px">${weekHdr}${grid}</div>`;
+  wrap.innerHTML = header + table;
 
-  // 하단 안내 — 크게, 필수만
+  // 하단 안내 + 브랜드 (Great Vibes 필기체)
   const footer = document.createElement('div');
-  footer.style.cssText = 'text-align:center;margin-top:48px';
   footer.innerHTML = `
-    <div style="font-size:30px;color:#5D4636;margin-bottom:24px;letter-spacing:2px;font-weight:700;line-height:1.5">휴무와 수업 외의 날짜는<br>전부 시술 예약 가능합니다</div>
-    <div style="font-family:'Nanum Myeongjo',serif;font-weight:900;font-size:64px;color:#FF4D7E;letter-spacing:4px">ARTbrows</div>
+    <div style="text-align:center;margin-top:28px;padding:0 20px">
+      <div style="font-size:22px;color:#3D2818;font-weight:600;letter-spacing:0.5px;line-height:1.6">휴무와 수업 외의 날짜는 전부 시술 예약 가능합니다. 예약 및 방문 시 참고 부탁드립니다.</div>
+    </div>
+    <div style="text-align:center;margin-top:22px;padding:26px 0;background:#EFE4D0">
+      <div style="font-family:'Great Vibes',cursive;font-size:80px;color:#3D2818;line-height:1">ARTbrows</div>
+    </div>
   `;
   wrap.appendChild(footer);
 
@@ -1338,7 +1376,7 @@ async function exportPng(previewOnly = false) {
   try {
     const canvas = await html2canvas(wrap, {
       scale: 1,
-      backgroundColor: '#FAF6F0',
+      backgroundColor: '#F5EED8',
       logging: false,
       useCORS: true
     });
