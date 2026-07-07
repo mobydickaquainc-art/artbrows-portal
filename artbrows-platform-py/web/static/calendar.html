@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>강의 스케줄 자동 — 원장님 달력 UI 데모 v1.0</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@400;700;900&family=Great+Vibes&family=Sacramento&family=Caveat:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Prata&family=Noto+Sans+KR:wght@400;700;900&family=Great+Vibes&family=Sacramento&family=Caveat:wght@700&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#FAF6F0;color:#3D2818;line-height:1.65;max-width:1100px;margin:0 auto;padding:24px}
 
@@ -1265,14 +1265,17 @@ async function exportPng(previewOnly = false) {
       const key = `${curYear}-${curMonth}-${d}`;
       const evs = events[key] || [];
 
-      // 날짜 배지 — 벤치마크 매칭: 얇은 세리프 (Cormorant Light 300)
+      // 날짜 배지 — 벤치마크 매칭: 얇은 세리프 (Playfair Display + Lining Figures 강제)
+      // 「1」이 「I」로 렌더링되는 Old Style Numerals 문제 해결 · font-variant-numeric:lining-nums
+      const dateNumFontStack = `'Playfair Display','Prata','Cormorant Garamond',serif`;
+      const liningNums = `font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1`;
       let dateBadge = '';
       if (dow === 0) {
-        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:400;font-size:30px;text-align:center">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:28px;text-align:center;${liningNums}">${d}</span>`;
       } else if (dow === 6) {
-        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:400;font-size:30px;text-align:center">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:28px;text-align:center;${liningNums}">${d}</span>`;
       } else {
-        dateBadge = `<span style="font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:300;font-size:46px;color:#2A2A2A;letter-spacing:-0.5px">${d}</span>`;
+        dateBadge = `<span style="font-family:${dateNumFontStack};font-weight:400;font-size:44px;color:#2A2A2A;letter-spacing:-0.5px;${liningNums}">${d}</span>`;
       }
 
       let individualHtml = '';
