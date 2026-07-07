@@ -159,7 +159,6 @@
     <span id="sync-badge" title="서버 DB 에 저장되어 다른 기기에서도 조회 가능" style="display:none;background:#D4F5D4;color:#2F7A2F;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:1px;margin-right:4px;align-self:center">☁ 서버 연결됨</span>
     <button onclick="location.href='/static/calendar-usage-guide.html'" style="background:#fff;color:#3D2818;border:1.5px solid #FF4D7E">? 사용법</button>
     <button onclick="toggleStyleMenu()" style="background:#3D2818;color:#FFB78A">🎨 스타일 <span id="styleName">크림 살구</span> ▾</button>
-    <button onclick="autoFill()">★ AI 자동 채우기</button>
     <button onclick="exportPng()">📸 사진 저장</button>
     <button onclick="publishToSNS()">📤 게시하기</button>
 
@@ -1203,23 +1202,6 @@ function prevMonth() {
 }
 function nextMonth() {
   if (curMonth === 12) { curMonth = 1; curYear++; } else curMonth++;
-  render();
-}
-
-function autoFill() {
-  if (!confirm('이번 달에 표준 패턴(평일 마스터반 + 격주 토요일 초급반)을 자동 채울까요?')) return;
-  const lastDay = new Date(curYear, curMonth, 0).getDate();
-  for (let d = 1; d <= lastDay; d++) {
-    const dow = new Date(curYear, curMonth-1, d).getDay();
-    const key = `${curYear}-${curMonth}-${d}`;
-    if (events[key]) continue;
-    if (dow === 2 || dow === 4) {
-      events[key] = [{type:'master', start:'10:00', end:'14:00', memo:'평일 정규'}];
-    } else if (dow === 6 && d % 14 < 7) {
-      events[key] = [{type:'beginner', start:'13:00', end:'16:00', memo:'주말 신규'}];
-    }
-  }
-  localStorage.setItem('artbrows-classes', JSON.stringify(events));
   render();
 }
 
