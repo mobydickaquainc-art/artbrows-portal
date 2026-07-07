@@ -1301,15 +1301,16 @@ async function exportPng(previewOnly = false) {
         // 그룹 이벤트는 셀 여러 개 폭을 쓰므로 라벨 길이 확장 (개별=8자 · 그룹=20자)
         const maxLen = ev.groupId ? 20 : 8;
         const short = showLabel.length > maxLen ? showLabel.slice(0, maxLen-1)+'…' : showLabel;
-        // PNG grid gap = 12px, 셀 padding = 18px → 30px margin 음수
+        // 그룹 카드는 세로 높이·padding 통일. 좌우 padding만 grp별로 조정 (좌 12·우 12 기본)
         let extraStyle = '';
-        if (grpPos === 'grp-start') extraStyle = 'border-radius:8px 0 0 8px;margin-right:-30px;padding-right:38px';
-        else if (grpPos === 'grp-mid') extraStyle = 'border-radius:0;margin-left:-30px;margin-right:-30px;padding:10px 0';
-        else if (grpPos === 'grp-end') extraStyle = 'border-radius:0 8px 8px 0;margin-left:-30px;padding-left:38px';
-        // 파트너 강사 서브텍스트 (첫 셀만)
-        const instructorLine = (ev.instructor && grpPos !== 'grp-mid' && grpPos !== 'grp-end')
+        if (grpPos === 'grp-start') extraStyle = 'border-radius:8px 0 0 8px;margin-right:-30px;padding-left:12px;padding-right:38px';
+        else if (grpPos === 'grp-mid') extraStyle = 'border-radius:0;margin-left:-30px;margin-right:-30px;padding-left:0;padding-right:0';
+        else if (grpPos === 'grp-end') extraStyle = 'border-radius:0 8px 8px 0;margin-left:-30px;padding-left:38px;padding-right:12px';
+        // 강사 이름은 라벨 있는 셀(개별 or 그룹 중간)에만 표시 (라벨 위치와 통일)
+        const labelCell = !ev.groupId || grpPos === 'grp-mid' || (grpPos === 'grp-start' && showLabel);
+        const instructorLine = (ev.instructor && labelCell)
           ? `<div style="font-size:14px;font-weight:600;color:${fg};opacity:0.85;margin-top:2px">👤 ${ev.instructor}</div>` : '';
-        evHtml += `<div style="background:${bg};color:${fg};font-size:22px;font-weight:800;padding:10px 12px;border-radius:8px;margin-top:8px;text-align:center;white-space:nowrap;overflow:visible;position:relative;z-index:2;${extraStyle}">${short}${instructorLine}</div>`;
+        evHtml += `<div style="background:${bg};color:${fg};font-size:22px;font-weight:800;padding-top:10px;padding-bottom:10px;padding-left:12px;padding-right:12px;border-radius:8px;margin-top:8px;text-align:center;white-space:nowrap;overflow:visible;position:relative;z-index:2;min-height:44px;box-sizing:border-box;${extraStyle}">${short}${instructorLine}</div>`;
       });
       if (evs.length > 2) evHtml += `<div style="font-size:14px;color:#8B6452;text-align:center;margin-top:3px">+${evs.length-2}</div>`;
     }
