@@ -1265,17 +1265,17 @@ async function exportPng(previewOnly = false) {
       const key = `${curYear}-${curMonth}-${d}`;
       const evs = events[key] || [];
 
-      // 날짜 배지 — 벤치마크 매칭: 얇은 산세리프 (Pretendard ExtraLight 200)
-      // 세리프(Cormorant/Playfair) 아님 · 심플 모던 산세리프 얇음
-      const dateNumFontStack = `'Pretendard','Noto Sans KR',sans-serif`;
-      const liningNums = `font-variant-numeric:lining-nums tabular-nums`;
+      // 날짜 배지 — 벤치마크 매칭: 얇은 세리프 (Playfair Display 400 · Lining Figures 강제)
+      // 재진단: 벤치마크 「1」에 미세 세리프 있음 · 「9」「3」 곡선 세리프 우아함
+      const dateNumFontStack = `'Playfair Display','Cormorant Garamond','EB Garamond',serif`;
+      const liningNums = `font-variant-numeric:lining-nums tabular-nums;font-feature-settings:'lnum' 1,'tnum' 1`;
       let dateBadge = '';
       if (dow === 0) {
-        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:26px;text-align:center;${liningNums}">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:50px;height:50px;line-height:50px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:28px;text-align:center;${liningNums}">${d}</span>`;
       } else if (dow === 6) {
-        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:26px;text-align:center;${liningNums}">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:50px;height:50px;line-height:50px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:${dateNumFontStack};font-weight:500;font-size:28px;text-align:center;${liningNums}">${d}</span>`;
       } else {
-        dateBadge = `<span style="font-family:${dateNumFontStack};font-weight:200;font-size:44px;color:#2A2A2A;letter-spacing:-1px;${liningNums}">${d}</span>`;
+        dateBadge = `<span style="font-family:${dateNumFontStack};font-weight:400;font-size:48px;color:#2A2A2A;letter-spacing:-0.5px;${liningNums}">${d}</span>`;
       }
 
       let individualHtml = '';
