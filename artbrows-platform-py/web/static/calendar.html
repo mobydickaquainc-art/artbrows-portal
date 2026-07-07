@@ -1265,14 +1265,14 @@ async function exportPng(previewOnly = false) {
       const key = `${curYear}-${curMonth}-${d}`;
       const evs = events[key] || [];
 
-      // 날짜 배지 — 일요일 핑크원 · 토요일 그레이원 · 평일 검정 세리프
+      // 날짜 배지 — 벤치마크 매칭: 얇은 세리프 (Cormorant Light 300)
       let dateBadge = '';
       if (dow === 0) {
-        dateBadge = `<span style="display:inline-block;width:46px;height:46px;line-height:46px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;text-align:center">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#E85D8D;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:400;font-size:30px;text-align:center">${d}</span>`;
       } else if (dow === 6) {
-        dateBadge = `<span style="display:inline-block;width:46px;height:46px;line-height:46px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;text-align:center">${d}</span>`;
+        dateBadge = `<span style="display:inline-block;width:48px;height:48px;line-height:48px;background:#BFBFBF;color:#FFFFFF;border-radius:50%;font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:400;font-size:30px;text-align:center">${d}</span>`;
       } else {
-        dateBadge = `<span style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:40px;color:#2A2A2A">${d}</span>`;
+        dateBadge = `<span style="font-family:'Cormorant Garamond','EB Garamond','Prata',serif;font-weight:300;font-size:46px;color:#2A2A2A;letter-spacing:-0.5px">${d}</span>`;
       }
 
       let individualHtml = '';
